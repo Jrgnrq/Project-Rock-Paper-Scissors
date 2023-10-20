@@ -4,7 +4,59 @@ function getComputerChoice(arr) {
     let randomIndex = Math.floor(Math.random() * arr.length);
     return arr[randomIndex];
 }
+let paperButton = document.createElement("button")
+    paperButton.textContent ="Paper"
+    paperButton.style.backgroundColor = "white";
+    paperButton.style.color = "black";
+    paperButton.style.fontSize = "16px";
+    paperButton.style.width = "100px"
+    paperButton.style.height = "50px"
+document.getElementById("game-buttons").appendChild(paperButton);
+let rockButton = document.createElement("button")
+    rockButton.textContent = "Rock"
+    rockButton.style.backgroundColor = "gray";
+    rockButton.style.color = "black";
+    rockButton.style.fontSize = "16px";
+    rockButton.style.width = "100px"
+    rockButton.style.height = "50px"
+document.getElementById("game-buttons").appendChild(rockButton);
+let scissorsButton = document.createElement("button")
+    scissorsButton.textContent ="Scissors"
+    scissorsButton.style.backgroundColor = "red";
+    scissorsButton.style.color = "black";
+    scissorsButton.style.fontSize = "16px";
+    scissorsButton.style.width = "100px"
+    scissorsButton.style.height = "50px"
+document.getElementById("game-buttons").appendChild(scissorsButton);
+function getPlayerChoice(){
+    return new Promise((resolve, reject) => {
+        const onChoice = (choice) => {
+            // Remove event listeners to prevent multiple clicks
+            paperButton.removeEventListener('click', onPaperClick);
+            rockButton.removeEventListener('click', onRockClick);
+            scissorsButton.removeEventListener('click', onScissorsClick);
 
+            resolve(choice);
+        };
+
+        const onPaperClick = () => {
+            onChoice("Paper");
+        };
+
+        const onRockClick = () => {
+            onChoice("Rock");
+        };
+
+        const onScissorsClick = () => {
+            onChoice("Scissors");
+        };
+
+        // Add event listeners
+        paperButton.addEventListener('click', onPaperClick);
+        rockButton.addEventListener('click', onRockClick);
+        scissorsButton.addEventListener('click', onScissorsClick);
+    });
+}
 //function that plays a single round of Rock Paper Scissors
 
 function playRound(playerSelection, computerSelection) {
@@ -37,36 +89,12 @@ function playRound(playerSelection, computerSelection) {
        }
   }
 //funtion that make a b05
-/*function game(){
-    let playerWins = 0;
-    let computerWins = 0;
-    let playerWon = "win";
-    let result = playRound(playerSelection, computerSelection);
-    while ((computerWins < 5)){
-
-        if (result.includes(playerWon)){
-            playerWins++;
-        }
-        else{
-            computerWins++;
-        }
-        
-    }
-    if (playerWins > computerWins){
-        return "You win!";
-    }
-    else {
-        return "You lose";
-    }
-    }*/
-
-
-function game(){
+async function game(){
     let playerWon = "win";
     let computerWon = "lose";
     while (computerWins < 5 && playerWins < 5){
 
-        let playerSelection = window.prompt("Choose: ");
+        let playerSelection = await getPlayerChoice();
         let computerSelection = getComputerChoice(choiceArray);
         let result = playRound(playerSelection, computerSelection);
         
@@ -82,7 +110,12 @@ function game(){
         }
         console.log(result);
         console.log(playerWins, computerWins, ties);
+        playerScore.textContent = "Player points = " + playerWins;
+        computerScore.textContent = "computer points = " + computerWins;
     }
+    winner.textContent = "The winner its: " + whoWon()
+    console.log(whoWon());
+    console.log(playerWins, computerWins, ties);
 }
 function whoWon(){
 
@@ -90,13 +123,19 @@ function whoWon(){
         return "You win!";
     }
     else {
-        return "You lose";
+        return "Computer win!";
  
     }
 }
+
 let ties = 0;
 let playerWins = 0;
 let computerWins = 0;
+
+let playerScore = document.createElement("div");
+document.getElementById("score").appendChild(playerScore);
+let computerScore = document.createElement("div");
+document.getElementById("score").appendChild(computerScore);
 game();
-console.log(whoWon());
-console.log(playerWins, computerWins, ties);
+let winner = document.createElement("div")
+document.getElementById("score").appendChild(winner)
